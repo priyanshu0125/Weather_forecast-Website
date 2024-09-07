@@ -26,3 +26,65 @@ function displayWeather(weather){
 }
 
 // Search by current location
+async function getWeatherByLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(async (position) => {
+            const { latitude, longitude } = position.coords;
+            const response = await fetch(`${apiUrl}?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`);
+            const data = await response.json();
+            displayWeather(data);
+        });
+    } else {
+        alert('Geolocation is not supported by this browser.');
+    }
+}
+
+document.getElementById('currentLocationBtn').addEventListener('click', getWeatherByLocation);
+
+// dropdown list
+let recentCities = JSON.parse(localStorage.getItem('recentCities')) || [];
+
+function updateRecentCities(city) {
+    if (!recentCities.includes(city)) {
+        recentCities.push(city);
+        localStorage.setItem('recentCities', JSON.stringify(recentCities));
+    }
+}
+
+function displayRecentCities() {
+    const dropdown = document.getElementById('recentCitiesDropdown');
+    dropdown.innerHTML = recentCities.map(city => `<option value="${city}">${city}</option>`).join('');
+}
+
+document.getElementById('cityInput').addEventListener('input', displayRecentCities);
+
+// extended forecast feature
+async function getExtendedForecast(city) {
+    const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`);
+    const data = await response.json();
+    displayExtendedForecast(data);
+}
+
+function displayExtendedForecast(data) {
+    const forecastDiv = document.getElementById('extendedForecast');
+    forecastDiv.innerHTML = data.list.map(item => `
+        <div class="forecast-item">
+            <p>${new Date(item.dt_txt).toLocaleDateString()}</p>
+            <p>Temp: ${item.main.temp}°C</p>
+            <p>Wind: ${item.wind.speed} m/s</p>
+            <p>Humidity: ${item.main.humidity}%</p>
+        </div>
+    `).join('');
+}
+
+// error handling
+async function getWeather(city) {
+    try {
+        const response = await fetch(`${apiUrl}?q=${city}&appid=${apiKey}&units=metric`);
+        if (!response.ok) throw new Error('City not found');
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        alert(error.message);
+    }
+}
