@@ -4,14 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="output.css">
-    <title>Document</title>
+    <title>Weather Forecast</title>
 </head>
 <body>
     <div class="text-center">
         <h1 class="text-4xl">Weather Forecast</h1>
         <input type="text" id="cityInput" class="border p-2" placeholder="Enter Your City Name">
         <button id="searchBtn" class="bg-blue-500">Search</button>
+        <button id="currentLocationBtn" class="bg-green-500">Use Current Location</button>
+        <select id="recentCitiesDropdown" class="border p-2 mt-2"></select>
         <div id="weatherData" class="mt-4"></div>
+        <div id="extendedForecast" class="mt-4"></div>
     </div>
     <script src="script.js"></script>
 </body>
