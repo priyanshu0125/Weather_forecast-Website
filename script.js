@@ -80,3 +80,8 @@ function displayExtendedForecast(data) {
         </div>
     `).join('');
 }
+
+document.getElementById('extendedForecastBtn').addEventListener('click', async () => {
+    const city = document.getElementById('cityInput').value;
+    await getExtendedForecast(city);
+});
