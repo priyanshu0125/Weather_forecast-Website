@@ -1,9 +1,9 @@
-const apiKey = 'apiURL727d955510f0e308d2b1b70c4e6680af';
-const apiURL = 'https://api.openweathermap.org/data/2.5/weather';
+const apiKey = '265da18a677f4b19996134425240709';
+const apiURL = 'https://api.weatherapi.com/v1/current.json';
 
 async function getWeather(city) {
     try {
-        const response = await fetch(`${apiURL}?q=${city}&appid=${apiKey}&units=metric`);
+        const response = await fetch(`${apiURL}?key=${apiKey}&q=${city}`);
         if (!response.ok) throw new Error('City not found');
         const data = await response.json();
         return data;
@@ -24,10 +24,10 @@ document.getElementById('searchBtn').addEventListener('click', async () => {
 function displayWeather(weather) {
     const weatherDiv = document.getElementById('weatherData');
     weatherDiv.innerHTML = `
-        <h2 class="text-2xl font-bold">${weather.name}</h2>
-        <p>Temperature: ${weather.main.temp}°C</p>
-        <p>Humidity: ${weather.main.humidity}%</p>
-        <p>Wind Speed: ${weather.wind.speed} m/s</p>
+        <h2 class="text-2xl font-bold">${weather.location.name}</h2>
+        <p>Temperature: ${weather.current.temp_c}°C</p>
+        <p>Humidity: ${weather.current.humidity}%</p>
+        <p>Wind Speed: ${weather.current.wind_kph} kph</p>
     `;
 }
 
@@ -35,7 +35,7 @@ async function getWeatherByLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(async (position) => {
             const { latitude, longitude } = position.coords;
-            const response = await fetch(`${apiURL}?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`);
+            const response = await fetch(`${apiURL}?key=${apiKey}&q=${latitude},${longitude}`);
             const data = await response.json();
             displayWeather(data);
         });
@@ -64,19 +64,19 @@ function displayRecentCities() {
 document.getElementById('cityInput').addEventListener('input', displayRecentCities);
 
 async function getExtendedForecast(city) {
-    const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`);
+    const response = await fetch(`https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${city}&days=5`);
     const data = await response.json();
     displayExtendedForecast(data);
 }
 
 function displayExtendedForecast(data) {
     const forecastDiv = document.getElementById('extendedForecast');
-    forecastDiv.innerHTML = data.list.map(item => `
+    forecastDiv.innerHTML = data.forecast.forecastday.map(day => `
         <div class="forecast-item">
-            <p>${new Date(item.dt_txt).toLocaleDateString()}</p>
-            <p>Temp: ${item.main.temp}°C</p>
-            <p>Wind: ${item.wind.speed} m/s</p>
-            <p>Humidity: ${item.main.humidity}%</p>
+            <p>${new Date(day.date).toLocaleDateString()}</p>
+            <p>Temp: ${day.day.avgtemp_c}°C</p>
+            <p>Wind: ${day.day.maxwind_kph} kph</p>
+            <p>Humidity: ${day.day.avghumidity}%</p>
         </div>
     `).join('');
 }
