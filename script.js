@@ -8,7 +8,7 @@ async function getWeather(city){
     return data;
 }
 
-// Location Based Forecast
+// city name Based Forecast
 document.getElementById('searchBtn').addEventListener('click', async() => {
     const city = document.getElementById('cityInput').value;
     const weather = await getWeather(city);
@@ -24,3 +24,5 @@ function displayWeather(weather){
         <p>Wind Speed: ${weather.wind.speed} m/s</p>
     `;
 }
+
+// Search by current location
