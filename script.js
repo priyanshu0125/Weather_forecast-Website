@@ -1,21 +1,27 @@
-// API SETUP
-const apiKey = 'YOUR_API_KEY';
+const apiKey = 'apiURL727d955510f0e308d2b1b70c4e6680af';
 const apiURL = 'https://api.openweathermap.org/data/2.5/weather';
 
-async function getWeather(city){
-    const response = await fetch(`${apiURL}?q=${city}&appid=${apiKey}&units=metric`);
-    const data = await response.json();
-    return data;
+async function getWeather(city) {
+    try {
+        const response = await fetch(`${apiURL}?q=${city}&appid=${apiKey}&units=metric`);
+        if (!response.ok) throw new Error('City not found');
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        alert(error.message);
+    }
 }
 
-// city name Based Forecast
-document.getElementById('searchBtn').addEventListener('click', async() => {
+document.getElementById('searchBtn').addEventListener('click', async () => {
     const city = document.getElementById('cityInput').value;
     const weather = await getWeather(city);
-    displayWeather(weather);
+    if (weather) {
+        displayWeather(weather);
+        updateRecentCities(city);
+    }
 });
 
-function displayWeather(weather){
+function displayWeather(weather) {
     const weatherDiv = document.getElementById('weatherData');
     weatherDiv.innerHTML = `
         <h2 class="text-2xl font-bold">${weather.name}</h2>
@@ -25,12 +31,11 @@ function displayWeather(weather){
     `;
 }
 
-// Search by current location
 async function getWeatherByLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(async (position) => {
             const { latitude, longitude } = position.coords;
-            const response = await fetch(`${apiUrl}?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`);
+            const response = await fetch(`${apiURL}?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`);
             const data = await response.json();
             displayWeather(data);
         });
@@ -41,7 +46,6 @@ async function getWeatherByLocation() {
 
 document.getElementById('currentLocationBtn').addEventListener('click', getWeatherByLocation);
 
-// dropdown list
 let recentCities = JSON.parse(localStorage.getItem('recentCities')) || [];
 
 function updateRecentCities(city) {
@@ -49,6 +53,7 @@ function updateRecentCities(city) {
         recentCities.push(city);
         localStorage.setItem('recentCities', JSON.stringify(recentCities));
     }
+    displayRecentCities();
 }
 
 function displayRecentCities() {
@@ -58,7 +63,6 @@ function displayRecentCities() {
 
 document.getElementById('cityInput').addEventListener('input', displayRecentCities);
 
-// extended forecast feature
 async function getExtendedForecast(city) {
     const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`);
     const data = await response.json();
@@ -75,16 +79,4 @@ function displayExtendedForecast(data) {
             <p>Humidity: ${item.main.humidity}%</p>
         </div>
     `).join('');
-}
-
-// error handling
-async function getWeather(city) {
-    try {
-        const response = await fetch(`${apiUrl}?q=${city}&appid=${apiKey}&units=metric`);
-        if (!response.ok) throw new Error('City not found');
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        alert(error.message);
-    }
 }
