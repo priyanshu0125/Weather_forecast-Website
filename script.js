@@ -13,7 +13,11 @@ async function getWeather(city) {
 }
 
 document.getElementById('searchBtn').addEventListener('click', async () => {
-    const city = document.getElementById('cityInput').value;
+    const city = document.getElementById('cityInput').value.trim();
+    if (city === '') {
+        alert('Please enter a city name.');
+        return;
+    }
     const weather = await getWeather(city);
     if (weather) {
         displayWeather(weather);
@@ -25,6 +29,7 @@ function displayWeather(weather) {
     const weatherDiv = document.getElementById('weatherData');
     weatherDiv.innerHTML = `
         <h2 class="text-2xl font-bold">${weather.location.name}</h2>
+        <img src="${weather.current.condition.icon}" alt="${weather.current.condition.text}">
         <p>Temperature: ${weather.current.temp_c}°C</p>
         <p>Humidity: ${weather.current.humidity}%</p>
         <p>Wind Speed: ${weather.current.wind_kph} kph</p>
@@ -82,6 +87,10 @@ function displayExtendedForecast(data) {
 }
 
 document.getElementById('extendedForecastBtn').addEventListener('click', async () => {
-    const city = document.getElementById('cityInput').value;
+    const city = document.getElementById('cityInput').value.trim();
+    if (city === '') {
+        alert('Please enter a city name.');
+        return;
+    }
     await getExtendedForecast(city);
 });
