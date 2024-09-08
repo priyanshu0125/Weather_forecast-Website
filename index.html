@@ -6,16 +6,20 @@
     <link rel="stylesheet" href="output.css">
     <title>Weather Forecast</title>
 </head>
-<body>
-    <div class="text-center">
-        <h1 class="text-4xl">Weather Forecast</h1>
-        <input type="text" id="cityInput" class="border p-2" placeholder="Enter Your City Name">
-        <button id="searchBtn" class="bg-blue-500">Search</button>
-        <button id="currentLocationBtn" class="bg-green-500">Use Current Location</button>
-        <button id="extendedForecastBtn" class="bg-yellow-500">Get Extended Forecast</button>
-        <select id="recentCitiesDropdown" class="border p-2 mt-2"></select>
-        <div id="weatherData" class="mt-4"></div>
-        <div id="extendedForecast" class="mt-4"></div>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-4">
+        <div class="text-center">
+            <h1 class="text-4xl font-bold mb-4">Weather Forecast</h1>
+            <input type="text" id="cityInput" class="border p-2 rounded mb-2" placeholder="Enter Your City Name">
+            <div class="flex justify-center space-x-2 mb-4">
+                <button id="searchBtn" class="bg-blue-500 text-white px-4 py-2 rounded">Search</button>
+                <button id="currentLocationBtn" class="bg-green-500 text-white px-4 py-2 rounded">Use Current Location</button>
+                <button id="extendedForecastBtn" class="bg-yellow-500 text-white px-4 py-2 rounded">Get Extended Forecast</button>
+            </div>
+            <select id="recentCitiesDropdown" class="border p-2 rounded mb-4"></select>
+            <div id="weatherData" class="bg-white p-4 rounded shadow-md mb-4"></div>
+            <div id="extendedForecast" class="bg-white p-4 rounded shadow-md"></div>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>

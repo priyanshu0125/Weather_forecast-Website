@@ -29,7 +29,7 @@ function displayWeather(weather) {
     const weatherDiv = document.getElementById('weatherData');
     weatherDiv.innerHTML = `
         <h2 class="text-2xl font-bold">${weather.location.name}</h2>
-        <img src="${weather.current.condition.icon}" alt="${weather.current.condition.text}">
+        <img src="${weather.current.condition.icon}" alt="${weather.current.condition.text}" class="mx-auto">
         <p>Temperature: ${weather.current.temp_c}°C</p>
         <p>Humidity: ${weather.current.humidity}%</p>
         <p>Wind Speed: ${weather.current.wind_kph} kph</p>
