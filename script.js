@@ -4,6 +4,7 @@ const apiURL = 'https://api.weatherapi.com/v1/current.json';
 // Show loading indicator
 function showLoading() {
     const weatherDiv = document.getElementById('weatherData');
+    weatherDiv.style.display = 'block';
     weatherDiv.innerHTML = `<p class="text-blue-500">Loading...</p>`;
 }
 
@@ -31,12 +32,14 @@ async function getWeather(city) {
 // Display error messages to the user
 function displayError(message) {
     const weatherDiv = document.getElementById('weatherData');
+    weatherDiv.style.display = 'block';
     weatherDiv.innerHTML = `<p class="text-red-500">${message}</p>`;
 }
 
 // Display weather data
 function displayWeather(weather) {
     const weatherDiv = document.getElementById('weatherData');
+    weatherDiv.style.display = 'block';
     weatherDiv.innerHTML = `
         <h2 class="text-2xl font-bold">${weather.location.name}</h2>
         <img src="${weather.current.condition.icon}" alt="${weather.current.condition.text}" class="mx-auto">
@@ -114,6 +117,7 @@ async function getExtendedForecast(city) {
 // Display extended weather forecast data
 function displayExtendedForecast(data) {
     const forecastDiv = document.getElementById('extendedForecast');
+    forecastDiv.style.display = 'block';
     forecastDiv.innerHTML = data.forecast.forecastday.map(day => `
         <div class="forecast-item bg-gray-200 p-2 rounded mb-2">
             <p class="font-bold">${new Date(day.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
