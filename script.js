@@ -1,14 +1,29 @@
 const apiKey = '265da18a677f4b19996134425240709';
 const apiURL = 'https://api.weatherapi.com/v1/current.json';
 
+// Show loading indicator
+function showLoading() {
+    const weatherDiv = document.getElementById('weatherData');
+    weatherDiv.innerHTML = `<p class="text-blue-500">Loading...</p>`;
+}
+
+// Hide loading indicator
+function hideLoading() {
+    const weatherDiv = document.getElementById('weatherData');
+    weatherDiv.innerHTML = '';
+}
+
 // Fetch weather data for a given city
 async function getWeather(city) {
+    showLoading();
     try {
         const response = await fetch(`${apiURL}?key=${apiKey}&q=${city}`);
         if (!response.ok) throw new Error('City not found');
         const data = await response.json();
+        hideLoading();
         return data;
     } catch (error) {
+        hideLoading();
         displayError(error.message);
     }
 }
@@ -18,20 +33,6 @@ function displayError(message) {
     const weatherDiv = document.getElementById('weatherData');
     weatherDiv.innerHTML = `<p class="text-red-500">${message}</p>`;
 }
-
-// Event listener for the search button
-document.getElementById('searchBtn').addEventListener('click', async () => {
-    const city = document.getElementById('cityInput').value.trim();
-    if (city === '') {
-        displayError('Please enter a city name.');
-        return;
-    }
-    const weather = await getWeather(city);
-    if (weather) {
-        displayWeather(weather);
-        updateRecentCities(city);
-    }
-});
 
 // Display weather data
 function displayWeather(weather) {
@@ -61,6 +62,20 @@ async function getWeatherByLocation() {
     }
 }
 
+// Event listener for the search button
+document.getElementById('searchBtn').addEventListener('click', async () => {
+    const city = document.getElementById('cityInput').value.trim();
+    if (city === '') {
+        displayError('Please enter a city name.');
+        return;
+    }
+    const weather = await getWeather(city);
+    if (weather) {
+        displayWeather(weather);
+        updateRecentCities(city);
+    }
+});
+
 // Event listener for the current location button
 document.getElementById('currentLocationBtn').addEventListener('click', getWeatherByLocation);
 
@@ -81,17 +96,17 @@ function displayRecentCities() {
     dropdown.innerHTML = recentCities.map(city => `<option value="${city}">${city}</option>`).join('');
 }
 
-// Event listener for the city input field
-document.getElementById('cityInput').addEventListener('input', displayRecentCities);
-
 // Fetch and display extended weather forecast
 async function getExtendedForecast(city) {
+    showLoading();
     try {
         const response = await fetch(`https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${city}&days=5`);
         if (!response.ok) throw new Error('Unable to fetch extended forecast');
         const data = await response.json();
+        hideLoading();
         displayExtendedForecast(data);
     } catch (error) {
+        hideLoading();
         displayError(error.message);
     }
 }
@@ -101,7 +116,7 @@ function displayExtendedForecast(data) {
     const forecastDiv = document.getElementById('extendedForecast');
     forecastDiv.innerHTML = data.forecast.forecastday.map(day => `
         <div class="forecast-item bg-gray-200 p-2 rounded mb-2">
-            <p class="font-bold">${new Date(day.date).toLocaleDateString()}</p>
+            <p class="font-bold">${new Date(day.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
             <img src="${day.day.condition.icon}" alt="${day.day.condition.text}" class="mx-auto">
             <p>Temp: ${day.day.avgtemp_c}°C</p>
             <p>Wind: ${day.day.maxwind_kph} kph</p>
