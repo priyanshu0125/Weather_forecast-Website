@@ -26,13 +26,9 @@ A simple and responsive weather dashboard built using HTML, Tailwind CSS, and Ja
 
 ### Installation
 
-1. Clone the repository
-2. Navigate to the project directory:
-    ```bash
-    cd weather-dashboard
-    ```
+1. Clone the repository.
+2. Navigate to the project directory.
 3. Open `index.html` in your web browser.
-
 4. run the tailwindcss command in the terminal 
     ```
      npx tailwindcss -i ./style.css -o ./output.css --watch
