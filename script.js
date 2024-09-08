@@ -116,10 +116,13 @@ async function getExtendedForecast(city) {
 
 // Display extended weather forecast data
 function displayExtendedForecast(data) {
+    const weatherDiv = document.getElementById('weatherData');
+    weatherDiv.style.display = 'none'; // Hide weatherData div
+
     const forecastDiv = document.getElementById('extendedForecast');
-    forecastDiv.style.display = 'block';
+    forecastDiv.style.display = 'grid';
     forecastDiv.innerHTML = data.forecast.forecastday.map(day => `
-        <div class="forecast-item bg-gray-200 p-2 rounded mb-2">
+        <div class="forecast-item bg-white p-4 rounded shadow-md">
             <p class="font-bold">${new Date(day.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
             <img src="${day.day.condition.icon}" alt="${day.day.condition.text}" class="mx-auto">
             <p>Temp: ${day.day.avgtemp_c}°C</p>
