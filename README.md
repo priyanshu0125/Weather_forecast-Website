@@ -45,3 +45,7 @@ A simple and responsive weather dashboard built using HTML, Tailwind CSS, and Ja
 ├── index.html
 ├── script.js
 ├── README.md
+
+##Github Repo URL
+https://github.com/priyanshu0125/Weather_forecast-Website.git
+Copy and paste the repo in the browser to open the repo
