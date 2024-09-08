@@ -42,10 +42,10 @@ function displayWeather(weather) {
     weatherDiv.style.display = 'block';
     weatherDiv.innerHTML = `
         <h2 class="text-2xl font-bold">${weather.location.name}</h2>
-        <img src="${weather.current.condition.icon}" alt="${weather.current.condition.text}" class="mx-auto">
-        <p>Temperature: ${weather.current.temp_c}°C</p>
-        <p>Humidity: ${weather.current.humidity}%</p>
-        <p>Wind Speed: ${weather.current.wind_kph} kph</p>
+        <img src="${weather.current.condition.icon}" alt="${weather.current.condition.text}" class="mx-auto my-4">
+        <p class="text-lg">Temperature: ${weather.current.temp_c}°C</p>
+        <p class="text-lg">Humidity: ${weather.current.humidity}%</p>
+        <p class="text-lg">Wind Speed: ${weather.current.wind_kph} kph</p>
     `;
 }
 
@@ -99,6 +99,17 @@ function displayRecentCities() {
     dropdown.innerHTML = recentCities.map(city => `<option value="${city}">${city}</option>`).join('');
 }
 
+// Event listener for the recent cities dropdown
+document.getElementById('recentCitiesDropdown').addEventListener('change', async (event) => {
+    const city = event.target.value;
+    if (city) {
+        const weather = await getWeather(city);
+        if (weather) {
+            displayWeather(weather);
+        }
+    }
+});
+
 // Fetch and display extended weather forecast
 async function getExtendedForecast(city) {
     showLoading();
@@ -122,12 +133,12 @@ function displayExtendedForecast(data) {
     const forecastDiv = document.getElementById('extendedForecast');
     forecastDiv.style.display = 'grid';
     forecastDiv.innerHTML = data.forecast.forecastday.map(day => `
-        <div class="forecast-item bg-white p-4 rounded shadow-md">
+        <div class="forecast-item bg-white p-4 rounded shadow-md max-w-xs mx-auto">
             <p class="font-bold">${new Date(day.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
-            <img src="${day.day.condition.icon}" alt="${day.day.condition.text}" class="mx-auto">
-            <p>Temp: ${day.day.avgtemp_c}°C</p>
-            <p>Wind: ${day.day.maxwind_kph} kph</p>
-            <p>Humidity: ${day.day.avghumidity}%</p>
+            <img src="${day.day.condition.icon}" alt="${day.day.condition.text}" class="mx-auto my-4">
+            <p class="text-lg">Temp: ${day.day.avgtemp_c}°C</p>
+            <p class="text-lg">Wind: ${day.day.maxwind_kph} kph</p>
+            <p class="text-lg">Humidity: ${day.day.avghumidity}%</p>
         </div>
     `).join('');
 }
