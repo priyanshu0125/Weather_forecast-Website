@@ -1,6 +1,7 @@
 const apiKey = '265da18a677f4b19996134425240709';
 const apiURL = 'https://api.weatherapi.com/v1/current.json';
 
+// Fetch weather data for a given city
 async function getWeather(city) {
     try {
         const response = await fetch(`${apiURL}?key=${apiKey}&q=${city}`);
@@ -8,14 +9,21 @@ async function getWeather(city) {
         const data = await response.json();
         return data;
     } catch (error) {
-        alert(error.message);
+        displayError(error.message);
     }
 }
 
+// Display error messages to the user
+function displayError(message) {
+    const weatherDiv = document.getElementById('weatherData');
+    weatherDiv.innerHTML = `<p class="text-red-500">${message}</p>`;
+}
+
+// Event listener for the search button
 document.getElementById('searchBtn').addEventListener('click', async () => {
     const city = document.getElementById('cityInput').value.trim();
     if (city === '') {
-        alert('Please enter a city name.');
+        displayError('Please enter a city name.');
         return;
     }
     const weather = await getWeather(city);
@@ -25,6 +33,7 @@ document.getElementById('searchBtn').addEventListener('click', async () => {
     }
 });
 
+// Display weather data
 function displayWeather(weather) {
     const weatherDiv = document.getElementById('weatherData');
     weatherDiv.innerHTML = `
@@ -36,6 +45,7 @@ function displayWeather(weather) {
     `;
 }
 
+// Fetch weather data based on user's current location
 async function getWeatherByLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(async (position) => {
@@ -43,16 +53,20 @@ async function getWeatherByLocation() {
             const response = await fetch(`${apiURL}?key=${apiKey}&q=${latitude},${longitude}`);
             const data = await response.json();
             displayWeather(data);
+        }, () => {
+            displayError('Unable to retrieve your location.');
         });
     } else {
-        alert('Geolocation is not supported by this browser.');
+        displayError('Geolocation is not supported by this browser.');
     }
 }
 
+// Event listener for the current location button
 document.getElementById('currentLocationBtn').addEventListener('click', getWeatherByLocation);
 
 let recentCities = JSON.parse(localStorage.getItem('recentCities')) || [];
 
+// Update the list of recent cities
 function updateRecentCities(city) {
     if (!recentCities.includes(city)) {
         recentCities.push(city);
@@ -61,24 +75,34 @@ function updateRecentCities(city) {
     displayRecentCities();
 }
 
+// Display the recent cities in a dropdown menu
 function displayRecentCities() {
     const dropdown = document.getElementById('recentCitiesDropdown');
     dropdown.innerHTML = recentCities.map(city => `<option value="${city}">${city}</option>`).join('');
 }
 
+// Event listener for the city input field
 document.getElementById('cityInput').addEventListener('input', displayRecentCities);
 
+// Fetch and display extended weather forecast
 async function getExtendedForecast(city) {
-    const response = await fetch(`https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${city}&days=5`);
-    const data = await response.json();
-    displayExtendedForecast(data);
+    try {
+        const response = await fetch(`https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${city}&days=5`);
+        if (!response.ok) throw new Error('Unable to fetch extended forecast');
+        const data = await response.json();
+        displayExtendedForecast(data);
+    } catch (error) {
+        displayError(error.message);
+    }
 }
 
+// Display extended weather forecast data
 function displayExtendedForecast(data) {
     const forecastDiv = document.getElementById('extendedForecast');
     forecastDiv.innerHTML = data.forecast.forecastday.map(day => `
-        <div class="forecast-item">
-            <p>${new Date(day.date).toLocaleDateString()}</p>
+        <div class="forecast-item bg-gray-200 p-2 rounded mb-2">
+            <p class="font-bold">${new Date(day.date).toLocaleDateString()}</p>
+            <img src="${day.day.condition.icon}" alt="${day.day.condition.text}" class="mx-auto">
             <p>Temp: ${day.day.avgtemp_c}°C</p>
             <p>Wind: ${day.day.maxwind_kph} kph</p>
             <p>Humidity: ${day.day.avghumidity}%</p>
@@ -86,10 +110,11 @@ function displayExtendedForecast(data) {
     `).join('');
 }
 
+// Event listener for the extended forecast button
 document.getElementById('extendedForecastBtn').addEventListener('click', async () => {
     const city = document.getElementById('cityInput').value.trim();
     if (city === '') {
-        alert('Please enter a city name.');
+        displayError('Please enter a city name.');
         return;
     }
     await getExtendedForecast(city);
