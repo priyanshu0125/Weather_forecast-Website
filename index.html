@@ -7,18 +7,18 @@
     <title>Weather Forecast</title>
 </head>
 <body class="bg-gradient-to-r from-blue-400 to-purple-500 min-h-screen flex items-center justify-center">
-    <div class="container mx-auto p-4 bg-white rounded-lg shadow-lg max-w-lg">
+    <div class="container mx-auto p-4 bg-white rounded-lg shadow-lg max-w-lg md:max-w-2xl lg:max-w-4xl">
         <div class="text-center">
-            <h1 class="text-4xl font-bold mb-4 text-emerald-900 underline skew-x-6">WeatherBeforeU</h1>
+            <h1 class="text-4xl font-bold mb-4 text-indigo-800 underline skew-x-6">WeatherBeforeU</h1>
             <input type="text" id="cityInput" class="border p-2 rounded mb-2 w-full" placeholder="Enter Your City Name">
-            <div class="flex justify-center space-x-2 mb-4">
-                <button id="searchBtn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Search</button>
-                <button id="currentLocationBtn" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Use Current Location</button>
-                <button id="extendedForecastBtn" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">Get Extended Forecast</button>
+            <div class="flex flex-col md:flex-row justify-center space-y-2 md:space-y-0 md:space-x-2 mb-4">
+                <button id="searchBtn" class="bg-indigo-500 text-black px-4 py-2 rounded hover:bg-indigo-600">Search</button>
+                <button id="currentLocationBtn" class="bg-indigo-500 text-black px-4 py-2 rounded hover:bg-indigo-600">Use Current Location</button>
+                <button id="extendedForecastBtn" class="bg-indigo-500 text-black px-4 py-2 rounded hover:bg-indigo-600">Get Extended Forecast</button>
             </div>
             <select id="recentCitiesDropdown" class="border p-2 rounded mb-4 w-full"></select>
             <div id="weatherData" class="bg-gray-100 p-4 rounded shadow-md mb-4" style="display: none;"></div>
-            <div id="extendedForecast" class="grid grid-cols-1 gap-4" style="display: none;"></div>
+            <div id="extendedForecast" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" style="display: none;"></div>
         </div>
     </div>
     <script src="script.js"></script>
